@@ -4,71 +4,41 @@ import { authenticate } from "../shopify.server";
 export async function loader({ request }) {
   const { admin } = await authenticate.admin(request);
 
-  try {
-    const existing = await admin.graphql(`
-      query {
-        automaticDiscountNodes(first: 10) {
-          nodes {
-            id
-            automaticDiscount {
-              ... on DiscountAutomaticApp {
-                title
-              }
-            }
-          }
+  const result = await admin.graphql(`
+    mutation {
+      discountAutomaticAppCreate(
+        automaticAppDiscount: {
+          title: "Bundle Discount"
+          functionId: "208e9edf-8b9b-6b74-3f3a-539fdede2328"
+          startsAt: "2026-01-01T00:00:00Z"
+        }
+      ) {
+        automaticAppDiscount {
+          discountId
+        }
+        userErrors {
+          field
+          message
         }
       }
-    `);
-
-    const data = await existing.json();
-    const discounts = data.data.automaticDiscountNodes.nodes;
-    const alreadyExists = discounts.some(
-      (d) => d.automaticDiscount?.title === "Bundle Discount"
-    );
-
-    if (!alreadyExists) {
-      await admin.graphql(`
-        mutation {
-          discountAutomaticAppCreate(
-            automaticAppDiscount: {
-              title: "Bundle Discount"
-              functionId: "208e9edf-8b9b-6b74-3f3a-539fdede2328"
-              startsAt: "2026-01-01T00:00:00Z"
-            }
-          ) {
-            automaticAppDiscount {
-              discountId
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }
-      `);
     }
+  `);
 
-    return { created: !alreadyExists, error: null };
-  } catch (e) {
-    return { created: false, error: e.message };
-  }
+  const json = await result.json();
+  const userErrors = json.data.discountAutomaticAppCreate.userErrors;
+  const discountId = json.data.discountAutomaticAppCreate.automaticAppDiscount?.discountId;
+
+  return { discountId, userErrors };
 }
 
 export default function DiscountPage() {
-  const { created, error } = useLoaderData();
+  const { discountId, userErrors } = useLoaderData();
 
   return (
     <div style={{ padding: "20px" }}>
-      {error ? (
-        <p>❌ Error: {error}</p>
-      ) : created ? (
-        <p>✅ Descuento "Bundle Discount" creado exitosamente.</p>
-      ) : (
-        <p>ℹ️ El descuento "Bundle Discount" ya existe y está activo.</p>
-      )}
+      <h2>Debug Descuento</h2>
+      <p>discountId: {discountId || "null"}</p>
+      <p>userErrors: {JSON.stringify(userErrors)}</p>
     </div>
   );
 }
-
-
-
