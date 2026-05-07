@@ -1,4 +1,3 @@
-import { json } from "@remix-run/node";
 import { useLoaderData } from "react-router";
 import { Page, Card, Text, Banner } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
@@ -6,7 +5,6 @@ import { authenticate } from "../shopify.server";
 export async function loader({ request }) {
   const { admin } = await authenticate.admin(request);
 
-  // Verificar si ya existe el descuento
   const existing = await admin.graphql(`
     query {
       automaticDiscountNodes(first: 10) {
@@ -50,7 +48,7 @@ export async function loader({ request }) {
     `);
   }
 
-  return json({ created: !alreadyExists });
+  return { created: !alreadyExists };
 }
 
 export default function DiscountPage() {
@@ -75,3 +73,4 @@ export default function DiscountPage() {
     </Page>
   );
 }
+
