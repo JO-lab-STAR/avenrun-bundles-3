@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 import { Page, Card, Text, Banner } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 
