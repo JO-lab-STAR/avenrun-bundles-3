@@ -1,0 +1,32 @@
+query RunInput {
+  cart {
+    lines {
+      id
+      quantity
+      cost {
+        amountPerQuantity {
+          amount
+          currencyCode
+        }
+      }
+      merchandise {
+        ... on ProductVariant {
+          product {
+            metafield_precio1: metafield(namespace: "custom", key: "precio1") {
+              value
+            }
+            metafield_precio2: metafield(namespace: "custom", key: "precio2") {
+              value
+            }
+            metafield_precio3: metafield(namespace: "custom", key: "precio3") {
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
