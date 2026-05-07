@@ -32,7 +32,7 @@ export async function loader({ request }) {
           discountAutomaticAppCreate(
             automaticAppDiscount: {
               title: "Bundle Discount"
-              functionId: "208e9edf-8b9b-6b74-3f3a-539fdede2328f859a084"
+              functionId: "208e9edf-8b9b-6b74-3f3a-539fdede2328"
               startsAt: "2026-01-01T00:00:00Z"
             }
           ) {
