@@ -2,7 +2,7 @@
 
 client_id = "3a7cb5644c10c164cde443840f5fa8af"
 name = "avenrun-bundles-3"
-application_url = "https://shopify.dev/apps/default-app-home"
+application_url = "https://avenrun-bundles-3.onrender.com"
 embedded = true
 
 [access_scopes]
@@ -20,7 +20,12 @@ api_version = "2026-07"
   topics = [ "app/scopes_update" ]
 
 [auth]
-redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+redirect_urls = [
+  "https://avenrun-bundles-3.onrender.com/auth/callback",
+  "https://avenrun-bundles-3.onrender.com/auth/shopify/callback",
+  "https://avenrun-bundles-3.onrender.com/api/auth/callback"
+]
 
 [build]
 automatically_update_urls_on_dev = true
+
